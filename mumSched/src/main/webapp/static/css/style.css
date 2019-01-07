@@ -1,0 +1,16 @@
+.invisible-at-first {
+	display: none;
+}
+
+.bg-color-green{
+	background-color = green;
+}
+
+.navbar {
+    position: relative;
+    min-height: 50px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 0px !important;
+}
+
