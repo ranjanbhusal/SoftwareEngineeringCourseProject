@@ -28,7 +28,8 @@
 			response.sendRedirect("login");
 		}
 	%>
-
+	<div class = "container-fluid">
+	<div class = "row">
 	<div role="navigation">
 		<div class="navbar navbar-dark bg-primary" style="color: white">
 			<div class="col-md-9">
@@ -41,32 +42,30 @@
 				</h4>
 			</div>
 
-			<div class="col-md-1" class="navbar-brand">
+			<div class="col-md-1" style= "vertical-align: center">
 				<a href="/logout"> <input type="submit" class="btn btn-info"
-					value="Logout" /></a>
+					value="Logout"></a>
 			</div>
 		</div>
 	</div>
-
-
+</div>
+</div>
 
 	<div class="container-fluid">
 		<div class="row">
-			<div class="col-md-2 alert alert-success">
+			<div class="col-md-2 list-group" role = "tablist">
 
 				<ul class="nav nav-pills nav-stacked">
-					
-					<li><a href="/show-users">View Users</a></li>
-					<li><a href="/view-entry">View Entry</a></li>
-					<li><a href="/view-block">View Block</a></li>
-					<li><a href="/view-course">View Course</a></li>
-					<li><a href="/add-schedule?username=${username}">Add
+					<li><a href="/show-users" class = "list-group-item list-group-item-action list-group-item-info">View Users</a></li>
+					<li><a href="/view-entry" class = "list-group-item list-group-item-action">View Entry</a></li>
+					<li><a href="/view-block" class = "list-group-item list-group-item-action">View Block</a></li>
+					<li><a href="/view-course" class = "list-group-item list-group-item-action">View Course</a></li>
+					<li><a href="/add-schedule?username=${username}" class = "list-group-item list-group-item-action">Add
 							Schedule</a></li>
-					<li><a href="/add-courseOnBlock">Add
+					<li><a href="/add-courseOnBlock" class = "list-group-item list-group-item-action">Add
 							Course on Block</a></li>
-					<li><a href="/add-studentEntry">Add
-							Student Entry</a></li>				
-							
+					<li><a href="/add-studentEntry" class = "list-group-item list-group-item-action">Add
+							Student Entry</a></li>						
 				</ul>
 			</div>
 
