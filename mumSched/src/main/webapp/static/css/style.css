@@ -3,7 +3,7 @@
 }
 
 .bg-color-green{
-	background-color = green;
+	background-color : green;
 }
 
 .navbar {
@@ -12,5 +12,15 @@
     margin-bottom: 20px;
     border: 1px solid transparent;
     border-radius: 0px !important;
+}
+
+tr.selected {
+	background-color: #9ad3de;
+	color: #ffffff;
+	
+}
+
+.nav-pills > .active > a, .nav-pills > .active > a:hover {
+    background-color: red; !important
 }
 

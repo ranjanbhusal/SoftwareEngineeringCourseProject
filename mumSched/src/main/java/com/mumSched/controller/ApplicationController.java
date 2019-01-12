@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mumSched.model.Block;
 import com.mumSched.model.BlockCourse;
@@ -31,6 +32,7 @@ import com.mumSched.services.BlockCourseServices;
 import com.mumSched.services.BlockServices;
 import com.mumSched.services.CourseServices;
 import com.mumSched.services.EntryServices;
+import com.mumSched.services.HomeService;
 import com.mumSched.services.StudentServices;
 import com.mumSched.services.UserServices;
 
@@ -55,64 +57,59 @@ public class ApplicationController {
 	@Autowired
 	private BlockCourseServices blockcourseservice;
 	
+	@Autowired
+	private HomeService homeservice;
+	
 	@RequestMapping(value = {"/login", "/",""})
 	public String Login() {
 		return "login";
 	}
 	
+
 	@RequestMapping("/login-user")
-	public String LoginUser(@RequestParam String username, @RequestParam String password, HttpServletRequest request, HttpServletResponse response) {
+	public String LoginUser(@RequestParam String username, @RequestParam String password,
+				HttpServletRequest request, HttpServletResponse response, RedirectAttributes redirectAttributes) {
+			User user = userservice.LoginUser(username, password);
+			if(user == null) {
+				request.setAttribute("error", "Invalid Username or Password");
+				return "login";
+			} else {
 		
-		User user = userservice.LoginUser(username, password);
-		if( user != null) {
-			Student student = studentservice.findByUserProfile(user);
-			Entry entry = student.getEntry();
-			List<Block> blocks = entry.getBlocks();
-			
-			List<BlockTable> blocktables = new ArrayList<>();
-			
-			for (Block block: blocks) {
-				BlockTable blockTable = new BlockTable();
-				blockTable.setBlockMonth(block.getBlockMonth());
-				List<BlockCourse> blockCourses = block.getBlockCourses();
-				
-				List<CourseTable> courseTables = new ArrayList<>();
-				for(BlockCourse blockCourse: blockCourses) {
-					CourseTable courseTable = new CourseTable();
-					courseTable.setCourseCode(blockCourse.getCourse().getCourseCode());
-					courseTable.setCourseTitle(blockCourse.getCourse().getCourseName());
-					courseTable.setProfessor(blockCourse.getProfessor());
-					courseTable.setSeatCapacity(blockCourse.getSeatCapacity());
-					courseTables.add(courseTable);
-				}
-				blockTable.setCourseTable(courseTables);
-				blocktables.add(blockTable);
+				List<BlockTable> blocktables = homeservice.homeContent(user);
+				//request.setAttribute("mode", "MODE_HOME");
+				HttpSession session = request.getSession();
+				session.setAttribute("username", username);
+				session.setAttribute("password", password);
+				request.setAttribute("blocktables", blocktables);
+				return "redirect:/welcome";
 			}
-			
-			request.setAttribute("mode", "MODE_HOME");
-			HttpSession session = request.getSession();
-			session.setAttribute("username", username);
-			request.setAttribute("blocktables", blocktables);
-			return "welcomepage";
-		}else {
-			request.setAttribute("error", "Invalid Username or Password");
-			return "login";
-		}
 	}
 	
 	@RequestMapping("/logout")
 	public String Logout(HttpSession session) {
-		session.removeAttribute("session");
+		session.removeAttribute("username");
 		return "login";
 	}
 	
 	@RequestMapping("/welcome")
 	public String WelcomePage(HttpServletRequest request, HttpServletResponse response) {
-		
+		HttpSession session = request.getSession();
+		String username = (String) session.getAttribute("username");
+		String password = (String) session.getAttribute ("password");
+		User user = userservice.LoginUser(username, password);
+		List<BlockTable> blocktables = homeservice.homeContent(user);
+		request.setAttribute("blocktables", blocktables);
 		request.setAttribute("mode", "MODE_HOME");
-
 		return "welcomepage";
 	}
+	
+//	@RequestMapping("/save-enrolled-courses")
+//	public String EnrollCourse (@ModelAttribute CourseTable courseTable, HttpServletRequest request, HttpServletResponse response) {
+//		
+//		
+//		request.setAttribute("mode", "MODE_HOME");
+//		return "welcomepage";
+//	}
 	
 	@RequestMapping("/register")
 	public String Registration(HttpServletRequest request) {
@@ -121,9 +118,12 @@ public class ApplicationController {
 	}
 	
 	@PostMapping("/save-user")
-	public String SaveUser(@ModelAttribute User user, BindingResult bindingresult, HttpServletRequest request){
+	public String SaveUser(@ModelAttribute User user, BindingResult bindingresult, HttpServletRequest request, RedirectAttributes redirectAttributes){
 		userservice.saveMyUser(user);
-		request.setAttribute("mode", "MODE_HOME");
+		request.setAttribute("users", userservice.showAllUser());
+		request.setAttribute("msg", "New Entry Added");
+
+		request.setAttribute("mode", "MODE_REGISTER");
 		return "welcomepage";
 	}
 	
@@ -174,7 +174,6 @@ public class ApplicationController {
 		request.setAttribute("mode", "ADD_BLOCK");
 		return "welcomepage";
 	}
-	
 	@PostMapping("/save-block")
 	public String SaveBlock(@ModelAttribute Block block, BindingResult bindingresult, HttpServletRequest request){
 		blockservice.saveMyBlock(block);

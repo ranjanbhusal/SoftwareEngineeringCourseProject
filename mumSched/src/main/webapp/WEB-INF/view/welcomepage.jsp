@@ -14,7 +14,8 @@
 <meta http-equiv="Expires" content="sat, 01 Dec 2001 00:00:00 GMT">
 <title>MUM_SCHED | home</title>
 <link href="static/css/bootstrap.min.css" rel="stylesheet">
-<link href="static/css/style.css" rel="stylesheet">
+<link href="static/css/style.css" rel="stylesheet" type = "text/css">
+
 <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -61,7 +62,7 @@
 					<li><a href="/view-block" class = "list-group-item list-group-item-action">View Block</a></li>
 					<li><a href="/view-course" class = "list-group-item list-group-item-action">View Course</a></li>
 					<li><a href="/add-schedule?username=${username}" class = "list-group-item list-group-item-action">Add
-							Schedule</a></li>
+							Blocks on Entry</a></li>
 					<li><a href="/add-courseOnBlock" class = "list-group-item list-group-item-action">Add
 							Course on Block</a></li>
 					<li><a href="/add-studentEntry" class = "list-group-item list-group-item-action">Add
@@ -73,44 +74,50 @@
 				<c:choose>
 					<c:when test="${mode=='MODE_HOME' }">
 						<div class="container" id="homediv">
-							
-							<c:forEach var="blocktable" items="${blocktables}">
-							
+						<h3>Please select your Courses</h3>
+						<br>
 							<div class="table-responsive">
-								<h3>${blocktable.blockMonth}</h3>
-								<table class="table table-striped table-bordered text-center">
-									<thead>
+								<table class="table">
+									<thead class = "thead-dark">
 										<tr>
-											<th>Course Name</th>
-											<th>Course Code</th>
-											<th>Professor Name</th>
-											<th>Seat Capacity</th>
+											<th scope = "col">Course Name</th>
+											<th scope = "col">Course Code</th>
+											<th scope = "col">Professor Name</th>
+											<th scope = "col">Seat Capacity</th>
 										</tr>
 									</thead>
-									<tbody>
-										<c:forEach var="courseTable" items="${blocktable.courseTable}">
-											<tr>
-												<td>${courseTable.courseTitle}</td>
-												<td>${courseTable.courseCode}</td>
-												<td>${courseTable.professor}</td>
-												<td>${courseTable.seatCapacity}</td>
-											</tr>
-										</c:forEach>
-									</tbody>
-								</table>
-							</div>
-							
-							
-							</c:forEach>
-							
-							
-						</div>
-					</c:when>
 
+									<tbody>
+										<c:forEach var="blocktable" items="${blocktables}">
+											<tr>
+												<th scope = "row"><Strong>${blocktable.blockMonth}</Strong></th>
+												<td></td>
+												<td></td>
+												<td></td>	
+											</tr>							
+													<c:forEach var="courseTable" items="${blocktable.courseTable}">
+														<tr class = "courseTable">
+															<td id = "id1">${courseTable.courseTitle}</td>
+															<td id = "id2">${courseTable.courseCode}</td>
+															<td id = "id3">${courseTable.professor}</td>
+															<td id = "id4">${courseTable.seatCapacity}</td>
+														</tr>
+													</c:forEach>
+												</c:forEach>
+											</tbody>
+										</table>
+										<form class="form-horizontal" method="POST" action="save-enrolled-courses">
+										<div class="form-group " id = "updateID">
+											<input type="submit" class="btn btn-primary" value="Enroll Course" />
+										</div>
+									</form>
+									</div>
+								</div>
+							</c:when>
 
 					<c:when test="${mode=='MODE_REGISTER' }">
 						<div class="container text-center">
-							<h3>New Registration</h3>
+							<h3 class = "bg-color-green">New Registration</h3>
 							<hr>
 							<form class="form-horizontal" method="POST" action="save-user">
 								<input type="hidden" name="id" value="${user.id }" />
@@ -170,16 +177,20 @@
 										</select>
 									</div>
 								</div>
-								<div class="form-group ">
+								<div class="form-group " id = "updateID">
 									<input type="submit" class="btn btn-primary" value="Register" />
 								</div>
 							</form>
+							<ul class="nav nav-pills pull-right entryAdded">
+								 <li class="active"><a href = "#">${ msg } </a></li>
+							</ul>
+
 						</div>
 					</c:when>
 
 
 					<c:when test="${mode=='MODE_USERS' }">
-						<div class="container text-center" id="tasksDiv">
+						<div class="container" id="tasksDiv">
 							<h3>All Users</h3>
 							<hr>
 							<div align="right">
@@ -187,8 +198,8 @@
 							</div>
 							<hr>
 							<div class="table-responsive">
-								<table class="table table-striped table-bordered text-center">
-									<thead>
+								<table class="table table-striped table-bordered">
+									<thead class = 'thead-dark'>
 										<tr>
 											<th>Id</th>
 											<th>User ID</th>
@@ -337,7 +348,7 @@
 					</c:when>
 
 					<c:when test="${mode=='VIEW_ENTRY' }">
-						<div class="container text-center" id="tasksDiv">
+						<div class="container" id="tasksDiv">
 							<h3>View Entry</h3>
 							<hr>
 							
@@ -346,7 +357,7 @@
 							</div>
 							<hr>
 							<div class="table-responsive">
-								<table class="table table-striped table-bordered text-center">
+								<table class="table table-striped table-bordered">
 									<thead>
 										<tr>
 											<th>ID</th>
@@ -412,7 +423,7 @@
 
 
 					<c:when test="${mode=='VIEW_BLOCK' }">
-						<div class="container text-center" id="tasksDiv">
+						<div class="container" id="tasksDiv">
 							<h3>View Block</h3>
 							<hr>
 							<div align="right">
@@ -420,7 +431,7 @@
 							</div>
 							<hr>
 							<div class="table-responsive">
-								<table class="table table-striped table-bordered text-center">
+								<table class="table table-striped table-bordered">
 									<thead>
 										<tr>
 											<th>Id</th>
@@ -484,7 +495,7 @@
 
 
 					<c:when test="${mode=='VIEW_COURSE' }">
-						<div class="container text-center" id="tasksDiv">
+						<div class="container" id="tasksDiv">
 							<h3>View Course</h3>
 							<hr>
 							<div align="right">
@@ -492,7 +503,7 @@
 							</div>
 							<hr>
 							<div class="table-responsive">
-								<table class="table table-striped table-bordered text-center">
+								<table class="table table-striped table-bordered">
 									<thead>
 										<tr>
 											<th>Id</th>
@@ -522,7 +533,7 @@
 						
 					<form class="form-horizontal" method="POST" action="save-schedule">	
 						<div class="container text-center">
-							<h3>Add Schedule</h3>
+							<h3>Add Blocks on Entry</h3>
 							<hr>
 							<h5>Select Entry</h5>
 							<select class="form-control" name="entry">
@@ -713,5 +724,7 @@
 	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
 	<script src="static/js/jquery-1.11.1.min.js"></script>
 	<script src="static/js/bootstrap.min.js"></script>
+	<script src="static/js/myScripts.js"></script>
+	
 </body>
 </html>
