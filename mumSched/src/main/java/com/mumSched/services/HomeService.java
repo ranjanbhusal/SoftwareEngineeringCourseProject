@@ -38,6 +38,7 @@ public class HomeService {
 				for (Block block: blocks) {
 					BlockTable blockTable = new BlockTable();
 					blockTable.setBlockMonth(block.getBlockMonth());
+					
 					List<BlockCourse> blockCourses = block.getBlockCourses();
 					
 					List<CourseTable> courseTables = new ArrayList<>();
@@ -56,4 +57,5 @@ public class HomeService {
 			
 		return blocktables;
 	}
+		
 }

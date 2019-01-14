@@ -14,8 +14,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mumSched.model.Block;
@@ -23,8 +26,11 @@ import com.mumSched.model.BlockCourse;
 import com.mumSched.model.BlockTable;
 import com.mumSched.model.Course;
 import com.mumSched.model.CourseTable;
+import com.mumSched.model.EnrolledCourses;
 import com.mumSched.model.Entry;
 import com.mumSched.model.EntryBlock;
+import com.mumSched.model.SelectedCourse;
+import com.mumSched.model.SelectedCourse2;
 import com.mumSched.model.Student;
 import com.mumSched.model.StudentEntry;
 import com.mumSched.model.User;
@@ -59,6 +65,7 @@ public class ApplicationController {
 	
 	@Autowired
 	private HomeService homeservice;
+	
 	
 	@RequestMapping(value = {"/login", "/",""})
 	public String Login() {
@@ -103,13 +110,82 @@ public class ApplicationController {
 		return "welcomepage";
 	}
 	
-//	@RequestMapping("/save-enrolled-courses")
-//	public String EnrollCourse (@ModelAttribute CourseTable courseTable, HttpServletRequest request, HttpServletResponse response) {
-//		
-//		
-//		request.setAttribute("mode", "MODE_HOME");
-//		return "welcomepage";
-//	}
+	@RequestMapping ("/enrolled-courses") 
+	public String enrolledC (HttpServletRequest request, HttpServletResponse response, RedirectAttributes redirectAttributes){
+		return "redirect:/save-enrolled-courses";
+	}
+	
+	@RequestMapping(value = "/save-enrolled-courses", method = RequestMethod.POST)
+	public @ResponseBody String EnrollCourse (@RequestBody SelectedCourse2 selectedCourse, HttpServletRequest request, HttpServletResponse response) {
+		System.out.println("start ajax call");
+		HttpSession session = request.getSession();
+		String username = (String) session.getAttribute("username");
+		String password = (String) session.getAttribute ("password");
+		User user = userservice.LoginUser(username, password);
+		
+		System.out.println("==============================\n");
+		System.out.println(selectedCourse.getFirst());
+		System.out.println("==============================\n");
+		
+		//List<BlockTable> blocktables = new ArrayList<>();
+		Student student = studentservice.findByUserProfile(user);
+		Entry entry = student.getEntry();
+		List<Block> blocks = entry.getBlocks();
+		EnrolledCourses enrolledCourses = new EnrolledCourses();
+		for (Block block: blocks) {
+			//BlockTable blockTable = new BlockTable();
+			enrolledCourses.setBlockMonth(block.getBlockMonth());
+			CourseTable courseTable = new CourseTable();
+				for (int i = 0; i<4; i++) {
+//					courseTable.setCourseTitle(selectedCourse.getFirstCourse()[i]);	
+//					courseTable.setCourseCode(selectedCourse.getSecondCourse()[i]);
+//					courseTable.setProfessor(selectedCourse.getThirdCourse()[i]);
+					courseTable.setSeatCapacity(25);
+				}
+			enrolledCourses.setCoursetable(courseTable);	
+		}
+		//enrolledCourseService.saveMyEnrolledCourse(enrolledCourses);
+		request.setAttribute("enrolledCourses", enrolledCourses);
+		request.setAttribute("username", username);
+		request.setAttribute("mode", "MODE_ENROLL");
+		System.out.println("end ajax call");
+		return "welcomepage";
+	}
+	
+	
+	@RequestMapping(value = "/save-enrolled-courses", method = RequestMethod.GET)
+	public @ResponseBody String EnrollCoursepost (@RequestBody SelectedCourse selectedCourse,  HttpServletRequest request, HttpServletResponse response) {
+		System.out.println("start ajax call");
+		HttpSession session = request.getSession();
+		String username = (String) session.getAttribute("username");
+		String password = (String) session.getAttribute ("password");
+		User user = userservice.LoginUser(username, password);
+
+		//List<BlockTable> blocktables = new ArrayList<>();
+		Student student = studentservice.findByUserProfile(user);
+		Entry entry = student.getEntry();
+		List<Block> blocks = entry.getBlocks();
+		EnrolledCourses enrolledCourses = new EnrolledCourses();
+		for (Block block: blocks) {
+			//BlockTable blockTable = new BlockTable();
+			enrolledCourses.setBlockMonth(block.getBlockMonth());
+			CourseTable courseTable = new CourseTable();
+				for (int i = 0; i<4; i++) {
+					courseTable.setCourseTitle(selectedCourse.getFirstCourse()[i]);	
+					courseTable.setCourseCode(selectedCourse.getSecondCourse()[i]);
+					courseTable.setProfessor(selectedCourse.getThirdCourse()[i]);
+					courseTable.setSeatCapacity(25);
+				}
+			enrolledCourses.setCoursetable(courseTable);	
+		}
+		//enrolledCourseService.saveMyEnrolledCourse(enrolledCourses);
+		request.setAttribute("enrolledCourses", enrolledCourses);
+		request.setAttribute("username", username);
+		request.setAttribute("mode", "MODE_ENROLL");
+		System.out.println("end ajax call");
+		return "welcomepage";
+	}
+	
 	
 	@RequestMapping("/register")
 	public String Registration(HttpServletRequest request) {

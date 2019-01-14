@@ -1,45 +1,25 @@
 package com.mumSched.model;
 
-import javax.persistence.Entity;
 
-//@Entity
 public class EnrolledCourses {
-	private String studentName;
-	private String firstCourse;
-	private String secondCourse;
-	private String thirdCourse;
-	private String fourthCourse;
+
+	private String blockMonth;
+	private CourseTable coursetable;
+	private Student student;
 	
-	public String getStudentName() {
-		return studentName;
+	public String getBlockMonth() {
+		return blockMonth;
 	}
-	public void setStudentName(String studentName) {
-		this.studentName = studentName;
+	public void setBlockMonth(String blockMonth) {
+		this.blockMonth = blockMonth;
 	}
-	public String getFirstCourse() {
-		return firstCourse;
+	public CourseTable getCoursetable() {
+		return coursetable;
 	}
-	public void setFirstCourse(String firstCourse) {
-		this.firstCourse = firstCourse;
+	public void setCoursetable(CourseTable coursetable) {
+		this.coursetable = coursetable;
 	}
-	public String getSecondCourse() {
-		return secondCourse;
-	}
-	public void setSecondCourse(String secondCourse) {
-		this.secondCourse = secondCourse;
-	}
-	public String getThirdCourse() {
-		return thirdCourse;
-	}
-	public void setThirdCourse(String thirdCourse) {
-		this.thirdCourse = thirdCourse;
-	}
-	public String getFourthCourse() {
-		return fourthCourse;
-	}
-	public void setFourthCourse(String fourthCourse) {
-		this.fourthCourse = fourthCourse;
-	}
+
 	
 	
 }

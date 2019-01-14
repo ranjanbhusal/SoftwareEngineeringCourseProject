@@ -34,7 +34,7 @@
 	<div role="navigation">
 		<div class="navbar navbar-dark bg-primary" style="color: white">
 			<div class="col-md-9">
-				<a href="/welcome" class="navbar-brand" style="color: whitesmoke">MUMSCHED</a>
+				<a href="/welcome" class="navbar-brand" style="color: whitesmoke">MUMSched - Select Courses</a>
 			</div>
 
 			<div class="col-md-2">
@@ -44,7 +44,7 @@
 			</div>
 
 			<div class="col-md-1" style= "vertical-align: center">
-				<a href="/logout"> <input type="submit" class="btn btn-info"
+				<a href="/logout"> <input type="submit" class="btn btn-info pull-right"
 					value="Logout"></a>
 			</div>
 		</div>
@@ -57,6 +57,7 @@
 			<div class="col-md-2 list-group" role = "tablist">
 
 				<ul class="nav nav-pills nav-stacked">
+					<li><a href="/save-enrolled-courses" class = "list-group-item list-group-item-action list-group-item-info">Your Enrolled Courses</a></li>
 					<li><a href="/show-users" class = "list-group-item list-group-item-action list-group-item-info">View Users</a></li>
 					<li><a href="/view-entry" class = "list-group-item list-group-item-action">View Entry</a></li>
 					<li><a href="/view-block" class = "list-group-item list-group-item-action">View Block</a></li>
@@ -76,18 +77,16 @@
 						<div class="container" id="homediv">
 						<h3>Please select your Courses</h3>
 						<br>
+						<p id = "displayResult">
 							<div class="table-responsive">
 								<table class="table">
-									<thead class = "thead-dark">
 										<tr>
 											<th scope = "col">Course Name</th>
 											<th scope = "col">Course Code</th>
 											<th scope = "col">Professor Name</th>
 											<th scope = "col">Seat Capacity</th>
 										</tr>
-									</thead>
 
-									<tbody>
 										<c:forEach var="blocktable" items="${blocktables}">
 											<tr>
 												<th scope = "row"><Strong>${blocktable.blockMonth}</Strong></th>
@@ -104,20 +103,58 @@
 														</tr>
 													</c:forEach>
 												</c:forEach>
-											</tbody>
 										</table>
-										<form class="form-horizontal" method="POST" action="save-enrolled-courses">
-										<div class="form-group " id = "updateID">
-											<input type="submit" class="btn btn-primary" value="Enroll Course" />
-										</div>
-									</form>
+										<button class = "btn btn-primary" id ="jsBtn">Enroll Course</button> 										
 									</div>
 								</div>
 							</c:when>
+							
+							
+				<c:when test="${mode=='MODE_ENROLL' }">
+						<div class="container" id="homediv">
+						<h3>Your Enrolled Courses</h3>
+						<br>
+						
+						
+						<p id = "displayResult">
+							<div class="table-responsive">
+								<table class="table">
+										<tr>
+											<th scope = "col">Course Name</th>
+											<th scope = "col">Course Code</th>
+											<th scope = "col">Professor Name</th>
+											<th scope = "col">Seat Capacity</th>
+										</tr>
+
+										<c:forEach var="enrolCourse" items="${enrolledCourses}">
+											<tr>
+												<th scope = "row"><Strong>${enrolCourse.blockMonth}</Strong></th>
+												<td></td>
+												<td></td>
+												<td></td>	
+											</tr>							
+													<c:forEach var="courseTable" items="${enrolCourse.coursetable}">
+														<tr class = "courseTable">
+															<td id = "id1">${courseTable.courseTitle}</td>
+															<td id = "id2">${courseTable.courseCode}</td>
+															<td id = "id3">${courseTable.professor}</td>
+															<td id = "id4">${courseTable.seatCapacity}</td>
+														</tr>
+													</c:forEach>
+												</c:forEach>
+										</table>
+										<button class = "btn btn-primary" id ="jsBtn">Enroll Course</button> 										
+									</div>
+								</div>
+							</c:when>			
+							
+							
+							
+							
 
 					<c:when test="${mode=='MODE_REGISTER' }">
 						<div class="container text-center">
-							<h3 class = "bg-color-green">New Registration</h3>
+							<h3>New Registration</h3>
 							<hr>
 							<form class="form-horizontal" method="POST" action="save-user">
 								<input type="hidden" name="id" value="${user.id }" />
@@ -181,8 +218,8 @@
 									<input type="submit" class="btn btn-primary" value="Register" />
 								</div>
 							</form>
-							<ul class="nav nav-pills pull-right entryAdded">
-								 <li class="active"><a href = "#">${ msg } </a></li>
+							<ul class="nav nav-pills pull-right entryAdded" id = "newBgColor">
+								 <li class="active"><a href = "#tab1" data-toggle = "tab">${ msg } </a></li>
 							</ul>
 
 						</div>
