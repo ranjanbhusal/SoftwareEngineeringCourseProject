@@ -10,11 +10,13 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -99,7 +101,7 @@ public class ApplicationController {
 	}
 	
 	@RequestMapping("/welcome")
-	public String WelcomePage(HttpServletRequest request, HttpServletResponse response) {
+	public String WelcomePage(HttpServletRequest request, HttpServletResponse response, @RequestHeader("User-Agent") String userAgent, Model model) {
 		HttpSession session = request.getSession();
 		String username = (String) session.getAttribute("username");
 		String password = (String) session.getAttribute ("password");
@@ -107,6 +109,7 @@ public class ApplicationController {
 		List<BlockTable> blocktables = homeservice.homeContent(user);
 		request.setAttribute("blocktables", blocktables);
 		request.setAttribute("mode", "MODE_HOME");
+		model.addAttribute("msg", "The message is for" + userAgent);
 		return "welcomepage";
 	}
 	

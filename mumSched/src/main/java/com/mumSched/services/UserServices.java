@@ -34,6 +34,10 @@ public class UserServices {
 		return users;
 	}
 	
+	public List<User> findByUserName(String name){
+		return this.userRepository.findByusername(name);
+	}
+	
 	public List<User>usersRoleStudent(){
 		List<User> users = new ArrayList<User>();
 		for (User user: userRepository.findAll()) {

@@ -11,9 +11,11 @@ package com.mumSched.model;
 	import javax.persistence.JoinTable;
 	import javax.persistence.ManyToMany;
 
+import org.springframework.hateoas.ResourceSupport;
+
 
 	@Entity
-	public class Entry {
+	public class Entry{
 		@Id
 		@GeneratedValue(strategy=GenerationType.AUTO)
 		private long id;

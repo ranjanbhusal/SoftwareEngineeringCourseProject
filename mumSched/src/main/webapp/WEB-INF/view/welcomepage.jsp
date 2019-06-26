@@ -40,6 +40,7 @@
 			<div class="col-md-2">
 				<h4>
 					<span>Welcome </span><span>${username}</span>
+					${msg}
 				</h4>
 			</div>
 
